@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #000;
+  color: #fff;
+}
+
+.results {
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  grid-gap: 10px;
+}
+
+.movie-container {
+  position: relative;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.movie-container__title {
+  text-align: center;
+}
+
+.movie-container__year {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.movie-container__type {
+  text-align: center;
+  margin-top: 0;
+}
+
+.movie-container__img {
+  width: 100%;
+}
+
+.movie-container__favorite {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: rgba(252, 162, 162, 0.397);
+}
