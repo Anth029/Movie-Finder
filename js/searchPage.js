@@ -56,3 +56,7 @@ form.addEventListener('submit', (e) => {
   movieSpace.textContent = ''
   callMovies(movie)
 })
+
+movieSpace.addEventListener('click', (e)=> {
+  console.log(e.target)
+})

@@ -4,15 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Finder</title>
+  <link rel="stylesheet" href="./css/loginStyles.css">
 </head>
 <body>
-
-  <h1>¡Welcome to a movie finder app!</h1>
-  <p>¡Login to start enjoy our content!</p>
+  <h1 class="title">¡Welcome to a movie finder app!</h1>
+  <p class="subtitle">¡Login to start enjoy our content!</p>
+  
   <form class="form" id="login-form">
-    <input required type="text" name="user">
-    <input required type="password" name="password">
-    <input type="submit" value="login" name="loginBtn">
+    <label class="form__label-name" for="name">Name:</label>
+    <input class="form__name" required type="text" id="name" name="user">
+    <label class="form__label-password" for="password">Password:</label>
+    <input class="form__password" required type="password" id="password" name="password">
+    <input class="form__submit" type="submit" value="login" name="loginBtn">
   </form>
 
   <a href="./imdbfinder.html">Skip login</a>
