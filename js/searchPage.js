@@ -82,15 +82,30 @@ const setData = (data) => {
 }
 
 const toggleFavorite = (imdbID) => {
-  const fav = document.getElementById(imdbID).firstElementChild
+  const movie = document.getElementById(imdbID)
   const data = getData()
-  if (data.favorites.includes(imdbID)){
-    data.favorites.splice(data.favorites.indexOf(imdbID),1)
-    fav.classList.remove('added')
+  const favoriteIcon = movie.firstElementChild
+  let conflict
+  
+  const favToSave = {
+    imdbID: movie.id,
+    outerHTML: movie.outerHTML
+  }
+  
+  data.favorites.forEach((value, index)=> {
+    if(value.imdbID === imdbID){
+      conflict = index
+    }
+  })
+  
+  if(conflict === undefined){
+    data.favorites.push(favToSave)
+    favoriteIcon.classList.add('added')
   }else {
-    data.favorites.push(imdbID)
-    fav.classList.add('added')
-  }  
+    data.favorites.splice(conflict, 1)
+    favoriteIcon.classList.remove('added')    
+  }
+
   setData(data) 
 }
 
