@@ -4,13 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/searchStyles.css">
+  <link rel="stylesheet" href="./css/modalStyles.css">
   <title>Movie Finder</title>
 </head>
 <body>
-  <h1 class="title">
-    ¡Type a movie to search!
+  
+    <div class="menu">
+        <p class="favorites-container" id="favorites-menu">
+      Favorites
+      </p>
+    <p class="logout" id="logout">
+    Logout
+  </p>
+    </div>
+<h1 class="title">
+    ¡Type a movie to search for!
   </h1>
-    
   <form class="form" id="search-form">
     <input type="text" name="searchField" class="form__input">
     <input type="submit" value="search" name="searchBtn" class="form__button">
@@ -19,6 +28,13 @@
   <div class="results" id="results">
 
   </div>
+
+  <div class="modal" id="modal-info">
+    <div class="modal__content" id="modal-info-content">
+
+    </div>
+  </div>
+
   <script src="./js/searchPage.js"></script>
 </body>
 </html>

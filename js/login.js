@@ -1,8 +1,12 @@
 const form = document.getElementById('login-form')
 
-if (sessionStorage.getItem('active')){
-  location.pathname = '/imdbfinder.html'
+const isLoged = () => {
+  if (sessionStorage.getItem('active')){
+    location.pathname = '/imdbfinder.html'
+  }
 }
+
+isLoged()
 
 const activeUser = (key) => {
   sessionStorage.setItem('active', key)
@@ -23,6 +27,7 @@ const keyGenerator = (name, password) => {
 
 const showPerfil = (key) => {
   activeUser(key)
+  isLoged()
 }
 
 
@@ -41,16 +46,7 @@ const userExist = (user, password) => {
 const createPerfil = (user, password) => {
   const key = keyGenerator(user, password)
   localStorage.setItem(key, create(user, password))
-  activeUser(key)
   showPerfil(key)
-}
-
-const addFavorite = (fav) => {
-  const key = sessionStorage.getItem('active')
-  const json = localStorage.getItem(key)
-  const data = JSON.parse(json)
-  data.favorites.push(fav)
-  localStorage.setItem(key, JSON.stringify(data))  
 }
 
 form.addEventListener('submit', (e) => {

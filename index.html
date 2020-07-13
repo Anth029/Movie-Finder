@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Finder</title>
-  <link rel="stylesheet" href="./css/loginStyles.css">
-</head>
-<body>
-  <h1 class="title">¡Welcome to a movie finder app!</h1>
-  <p class="subtitle">¡Login to start enjoy our content!</p>
-  
-  <form class="form" id="login-form">
-    <label class="form__label-name" for="name">Name:</label>
-    <input class="form__name" required type="text" id="name" name="user">
-    <label class="form__label-password" for="password">Password:</label>
-    <input class="form__password" required type="password" id="password" name="password">
-    <input class="form__submit" type="submit" value="login" name="loginBtn">
-  </form>
-
-  <a href="./imdbfinder.html">Skip login</a>
-  <script src="./js/login.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Finder</title>
+    <link rel="stylesheet" href="./css/loginStyles.css" />
+  </head>
+  <body>
+    <h1 class="title">¡Welcome to a movie finder app!</h1>
+    
+    <form class="form" id="login-form">
+      <p class="form__text">¡Login to start enjoy our content!</p>
+      <div class="grid-namepwd">
+        <label class="form__label-name" for="name">Name:</label>
+        <input class="form__name" required autocomplete="off" type="text" id="name" name="user" />
+        <label class="form__label-password" for="password">Password:</label>
+        <input
+          class="form__password"
+          required
+          type="password"
+          id="password"
+          name="password"
+        />
+      </div>
+      <input class="form__submit" type="submit" value="login" name="loginBtn" />
+    </form>
+    <script src="./js/login.js"></script>
+  </body>
 </html>
