@@ -8,32 +8,40 @@
     <title>Movie Finder</title>
   </head>
   <body>
-    <div class="menu">
-      <p class="favorites-container" id="favorites-menu">
-        Favorites
-      </p>
-      <p class="logout" id="logout">
-        Logout
-      </p>
-    </div>
-    <h1 class="title">
-      ¡Type a movie to search for!
-    </h1>
-    <form class="form" id="search-form">
-      <input type="text" name="searchField" class="form__input" />
-      <input
-        type="submit"
-        value="search"
-        name="searchBtn"
-        class="form__button"
-      />
-    </form>
+    <header class="header">
+      <h1 class="title">
+        ¡Type a movie to search for!
+      </h1>
+      <nav>
+        <ul class="menu" id="menu">
+          <li class="favorites-container" id="favorites-menu">Favorites</li>
+          <li class="logout" id="logout">Logout</li>
+        </ul>
+      </nav>
+    </header>
 
-    <div class="results" id="results"></div>
+    <main>
+      
+      <form class="form" id="search-form">
+        <p>¡Type a movie to search for!</p>
+        <input type="text" name="searchField" class="form__input" />
+        <input
+          type="submit"
+          value="search"
+          name="searchBtn"
+          class="form__button"
+        />
+      </form>
 
-    <div class="modal" id="modal-info">
-      <div class="modal__content" id="modal-info-content"></div>
-    </div>
+      <div class="results" id="results"></div>
+
+      <div class="modal" id="modal">
+        <!-- <div class="modal__content" id="modal-info-content"></div> -->
+      </div>
+      <!-- <div class="modal" id="modal-favorites">
+        <div class="modal__content results" id="modal-favorites-content"></div>
+      </div> -->
+    </main>
 
     <script src="./js/searchPage.js"></script>
   </body>

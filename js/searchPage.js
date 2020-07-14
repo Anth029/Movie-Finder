@@ -34,9 +34,11 @@ const showMovies = (movies) => {
     type.textContent = obj.Type
     img.setAttribute('src', obj.Poster)
     
-    if (getData().favorites.includes(obj.imdbID)){
-      favorite.classList.add('added')      
-    }
+    getData().favorites.forEach((v)=> {
+      if(v.imdbID === obj.imdbID){
+        favorite.classList.add('added')
+      }
+    })
     favorite.classList.add('movie-container__favorite')
     container.classList.add('movie-container')
     imgContainer.classList.add('movie-container__img-container')
@@ -89,7 +91,7 @@ const toggleFavorite = (imdbID) => {
   
   const favToSave = {
     imdbID: movie.id,
-    outerHTML: movie.outerHTML
+    innerHTML: movie.innerHTML
   }
   
   data.favorites.forEach((value, index)=> {
@@ -236,4 +238,35 @@ const showExtendedInfoMovies = (data) => {
   modalContent.textContent = ''
   fragment.appendChild(ratings)
   modalContent.appendChild(fragment)  
+}
+
+//Modal favorites
+const menu = document.getElementById('menu')
+const modalFavorites = document.getElementById('modal-favorites')
+const modalFavoritesContent = document.getElementById('modal-favorites-content')
+
+menu.addEventListener('click', e => {
+  if(e.target.id === "favorites-menu") {
+    showFavorites()
+    modalFavorites.classList.add('show')
+  } 
+})
+
+modalFavorites.addEventListener('click', (e)=> {
+  if(e.target === modalFavorites){
+    modalFavorites.classList.remove('show')
+  }
+})
+
+const showFavorites = () => {
+  modalFavoritesContent.textContent = ''
+  const data = getData()
+  const fragment = document.createDocumentFragment()
+  data.favorites.forEach((v, i)=> {
+    const container = document.createElement('div')
+    container.classList.add('movie-container')
+    container.innerHTML = v.innerHTML
+    fragment.appendChild(container)
+  })
+  modalFavoritesContent.appendChild(fragment)
 }
