@@ -1,18 +1,38 @@
 const form = document.getElementById('search-form')
-const movieSpace = document.getElementById('results')
-const modal = document.getElementById('modal-info')
-const modalContent = document.getElementById('modal-info-content')
+const results = document.getElementById('results')
+const modal = document.getElementById('modal')
+const menu = document.getElementById('menu')
+// const modalContent = document.getElementById('modal-info-content')
 
 if (!sessionStorage.getItem('active')){
   window.alert("Necesitas iniciar sesión")
   location.pathname = ''
 }
 
-const showError = (message) => {
-  const error = document.createElement('p')
-  error.textContent = message
-  movieSpace.textContent = ''
-  movieSpace.appendChild(error)
+form.addEventListener('submit', (e) => {
+  e.preventDefault()
+  const movie = form.searchField.value
+  if(movie !== ''){
+    const loading = document.createElement('p')
+    loading.classList.add('loading')
+    loading.textContent = 'Loading...'
+    results.appendChild(loading)
+    callMovies(movie)
+  }
+})
+
+const callMovies = async (movie) => {
+  try {
+    const dataJson = await fetch(
+    `http://www.omdbapi.com/?apikey=13085c3f&s=${movie}`
+  )
+  const data = await dataJson.json()
+  if (data.Response !== 'False') showMovies(data)
+  else showError(data.Error)
+  } catch (error) {
+    showError(error)
+  }
+  
 }
 
 //Movies search result: data consuming from omdbapi
@@ -28,7 +48,12 @@ const showMovies = (movies) => {
     const year = document.createElement('p')
     const type = document.createElement('p')
 
-    container.setAttribute('id', obj.imdbID)
+    // container.setAttribute('id', obj.imdbID)
+    container.dataset.imdbid = obj.imdbID
+    title.dataset.imdbid = obj.imdbID
+    img.dataset.imdbid = obj.imdbID
+    favorite.dataset.favorite = obj.imdbID
+
     title.textContent = obj.Title
     year.textContent = obj.Year
     type.textContent = obj.Type
@@ -53,45 +78,42 @@ const showMovies = (movies) => {
     container.append(favorite, imgContainer, info)
     fragment.appendChild(container)
   })
-  movieSpace.textContent = ''
-  movieSpace.appendChild(fragment)
+  results.textContent = ''
+  results.appendChild(fragment)
 }
 
-const callMovies = async (movie) => {
-  try {
-    const dataJson = await fetch(
-    `http://www.omdbapi.com/?apikey=13085c3f&s=${movie}`
-  )
-  const data = await dataJson.json()
-  if (data.Response === 'False') showError(data.Error)
-  else showMovies(data)
-  } catch (error) {
-    showError(error)
+const showError = (message) => {
+  const error = document.createElement('p')
+  error.classList.add('error')
+  error.textContent = message
+  results.textContent = ''
+  results.appendChild(error)
+}
+
+results.addEventListener('click', (e)=> {
+  const addThis = e.target.dataset.favorite
+  const infoClick = e.target.dataset.imdbid
+
+  if(addThis){
+    toggleFavorite(addThis)
   }
   
-}
+  if (infoClick){
+    modal.classList.add('show')
+    movieExtendedInfo(infoClick)
+  }
 
-const getData = () => {
-  const key = sessionStorage.getItem('active')
-  const json = localStorage.getItem(key)
-  const data = JSON.parse(json)
-  return data
-}
-
-const setData = (data) => {
-  const key = sessionStorage.getItem('active')
-  localStorage.setItem(key, JSON.stringify(data)) 
-}
+})
 
 const toggleFavorite = (imdbID) => {
-  const movie = document.getElementById(imdbID)
+  const movie = document.querySelector(`[data-imdbid=${imdbID}]`)
+  const favoriteIcon = document.querySelector(`[data-favorite=${imdbID}]`)
   const data = getData()
-  const favoriteIcon = movie.firstElementChild
   let conflict
   
   const favToSave = {
-    imdbID: movie.id,
-    innerHTML: movie.innerHTML
+    imdbID: imdbID
+    //data... so much data
   }
   
   data.favorites.forEach((value, index)=> {
@@ -111,73 +133,67 @@ const toggleFavorite = (imdbID) => {
   setData(data) 
 }
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const movie = form.searchField.value
-  if(movie !== ''){
-    movieSpace.textContent = 'Loading...'
-    callMovies(movie)
-  }
-})
-
-movieSpace.addEventListener('click', (e)=> {
-  if(e.target.className === "movie-container__img" || e.target.className === 'movie-container__title'){
-    movieExtendedInfo(e.target.offsetParent.id)
-    modal.classList.add('show')
-  }
-  
-  if(e.target.classList.contains('movie-container__favorite')){
-    toggleFavorite(e.target.offsetParent.id)
-  }
-})
-//Get out of modal window
-modal.addEventListener('click', (e)=> {
-  if (e.target.id === modal.id) modal.classList.remove('show')
-})
-
 //Extended Info, calling the api
 const movieExtendedInfo = async (imdbID) => {
-  modalContent.textContent = 'Loading...'
+  modal.textContent = ''
+  const loading = document.createElement('p')
+  loading.textContent = 'Loading...'
+  loading.classList.add('loading')
+  modal.appendChild(loading)
+
   try {
     const dataJson = await fetch(
     `http://www.omdbapi.com/?apikey=13085c3f&i=${imdbID}`
   )
   const data = await dataJson.json()
-  if (data.Response === 'False') showExtendedInfoError(data.Error)
-  else showExtendedInfoMovies(data)
+  if (data.Response === 'True') showExtendedInfoMovies(data)
+  else showExtendedInfoError(data.Error)
   } catch (error) {
     showExtendedInfoError(error)
   }
 }
 
+//Get out of modal window
+modal.addEventListener('click', (e)=> {
+  if (e.target === modal) modal.classList.remove('show')
+})
+
 const showExtendedInfoError = (error) => {
+  const textError = document.createElement('p')
+  textError.textContent = error
+  textError.classList.add('error')
   modalContent.textContent = ''
-  modalContent.textContent = error
+  modalContent.appendChild(textError)
 }
 
 //Extended Info, writing the information on the modal
 const showExtendedInfoMovies = (data) => {
-  const fragment = document.createDocumentFragment()
-  const modalTitle = document.createElement('h2')
-  const movieTitle = document.createElement('span')
-  const movieTitlePartner = document.createElement('span')
 
-  movieTitle.textContent = data.Title
-  movieTitlePartner.textContent = ' extended info'
+  const modalContent = document.createElement('div')
+  modalContent.classList.add('modal__extended-info')
 
-  movieTitle.classList.add('movie-title')
-  modalTitle.classList.add('modal-title')
-  movieTitlePartner.classList.add('movie-title-partner')
+  const title = document.createElement('h2')
+  const details = document.createElement('div')
+  const highlightText = document.createElement('span')
+  const normalText = document.createElement('span')
+  
+  highlightText.textContent = data.Title
+  normalText.textContent = ' extended info'
+  
+  details.classList.add('extended-info__details')
+  highlightText.classList.add('extended-info__title--highlight-text')
+  title.classList.add('extended-info__title')
+  normalText.classList.add('extended-info__title--normal-text')
 
-  modalTitle.append(movieTitle, movieTitlePartner)
+  title.append(highlightText, normalText)
 
   const ratings = document.createElement('div')
-  ratings.classList.add('movie-ratings')
+  ratings.classList.add('extended-info__ratings')
   const ratingsTitle = document.createElement('p')
-  ratingsTitle.classList.add('movie-ratings__title')
+  ratingsTitle.classList.add('ratings__title')
   ratingsTitle.textContent = 'Ratings'
 
-  fragment.appendChild(modalTitle)
+  modalContent.appendChild(title)
   ratings.appendChild(ratingsTitle)
   
   for (const key in data) {
@@ -185,8 +201,8 @@ const showExtendedInfoMovies = (data) => {
     if(key === 'Poster'){
       const el = document.createElement('img')
       el.setAttribute('src', data[key])
-      el.classList.add('movie-poster')
-      fragment.appendChild(el)
+      el.classList.add('extended-info__poster')
+      modalContent.appendChild(el)
     }
     //Array with rating information
     else if(Array.isArray(data[key])){      
@@ -196,9 +212,8 @@ const showExtendedInfoMovies = (data) => {
         const description = document.createElement('span')
         category.textContent = `${value.Source}: `
         description.textContent = value.Value
-        el.classList.add('movie-details')
-        category.classList.add('movie-categories')
-        description.classList.add('movie-descriptions')
+        category.classList.add('details__categories')
+        description.classList.add('details__descriptions')
         el.append(category, description)
         ratings.appendChild(el)
       })
@@ -210,9 +225,8 @@ const showExtendedInfoMovies = (data) => {
       const description = document.createElement('span')
       category.textContent = `${key}: `
       description.textContent = data[key]
-      el.classList.add('movie-details')
-      category.classList.add('movie-categories')
-      description.classList.add('movie-descriptions')
+      category.classList.add('details__categories')
+      description.classList.add('details__descriptions')
       el.append(category, description)
       ratings.appendChild(el)
     }
@@ -227,46 +241,53 @@ const showExtendedInfoMovies = (data) => {
       const description = document.createElement('span')
       category.textContent = `${key}: `
       description.textContent = data[key]
-      el.classList.add('movie-details')
-      category.classList.add('movie-categories')
-      description.classList.add('movie-descriptions')
+      category.classList.add('details__categories')
+      description.classList.add('details__descriptions')
       el.append(category, description)
-      fragment.appendChild(el)
+      details.appendChild(el)
     }
   }
-
-  modalContent.textContent = ''
-  fragment.appendChild(ratings)
-  modalContent.appendChild(fragment)  
+  modalContent.append(details ,ratings)
+  modal.textContent = ''
+  modal.appendChild(modalContent)  
 }
 
 //Modal favorites
-const menu = document.getElementById('menu')
-const modalFavorites = document.getElementById('modal-favorites')
-const modalFavoritesContent = document.getElementById('modal-favorites-content')
 
 menu.addEventListener('click', e => {
   if(e.target.id === "favorites-menu") {
-    showFavorites()
-    modalFavorites.classList.add('show')
+    // showFavorites()
+    // modalFavorites.classList.add('show')
   } 
 })
 
-modalFavorites.addEventListener('click', (e)=> {
-  if(e.target === modalFavorites){
-    modalFavorites.classList.remove('show')
-  }
-})
+// modalFavorites.addEventListener('click', (e)=> {
+//   if(e.target === modalFavorites){
+//     modalFavorites.classList.remove('show')
+//   }
+// })
 
-const showFavorites = () => {
-  modalFavoritesContent.textContent = ''
-  const data = getData()
-  const fragment = document.createDocumentFragment()
-  data.favorites.forEach((v, i)=> {
-    const container = document.createElement('div')
-    container.classList.add('movie-container')
-    container.innerHTML = v.innerHTML
-    fragment.appendChild(container)
-  })
-  modalFavoritesContent.appendChild(fragment)
+// const showFavorites = () => {
+//   modalFavoritesContent.textContent = ''
+//   const data = getData()
+//   const fragment = document.createDocumentFragment()
+//   data.favorites.forEach((v, i)=> {
+//     const container = document.createElement('div')
+//     container.classList.add('movie-container')
+//     container.innerHTML = v.innerHTML
+//     fragment.appendChild(container)
+//   })
+//   modalFavoritesContent.appendChild(fragment)
+// }
+
+const getData = () => {
+  const key = sessionStorage.getItem('active')
+  const json = localStorage.getItem(key)
+  const data = JSON.parse(json)
+  return data
+}
+
+const setData = (data) => {
+  const key = sessionStorage.getItem('active')
+  localStorage.setItem(key, JSON.stringify(data)) 
 }

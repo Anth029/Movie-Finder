@@ -9,28 +9,20 @@
   </head>
   <body>
     <header class="header">
-      <h1 class="title">
-        ¡Type a movie to search for!
-      </h1>
-      <nav>
+      <div class="logo"></div>
+      <nav class="header__nav">
         <ul class="menu" id="menu">
-          <li class="favorites-container" id="favorites-menu">Favorites</li>
-          <li class="logout" id="logout">Logout</li>
+          <li class="menu__item"><a class="menu__link" href="/"><img class="menu__img" src="./assets/stars.png" id="favorites-section" title="Favorites" alt="Favorites"></a></li>
+          <li class="menu__item"><a class="menu__link" href="/"><img class="menu__img" src="./assets/logout.png" id="logout" title="Logout" alt="Logout"></a></li>
         </ul>
       </nav>
     </header>
 
-    <main>
-      
+    <main class="main">
       <form class="form" id="search-form">
-        <p>¡Type a movie to search for!</p>
-        <input type="text" name="searchField" class="form__input" />
-        <input
-          type="submit"
-          value="search"
-          name="searchBtn"
-          class="form__button"
-        />
+        
+          <input placeholder="Search" type="text" name="searchField" class="form__input" />
+     
       </form>
 
       <div class="results" id="results"></div>
