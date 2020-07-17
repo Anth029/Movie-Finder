@@ -1,7 +1,5 @@
 :root {
   --radius: 3px;
-  --columns: 70px 1fr 70px;
-  --col: 70px;
   --vminheight: 50px;
 }
 
@@ -22,7 +20,7 @@ body {
 
 .header {
   display: grid;
-  grid-template-columns: var(--columns) ;
+  grid-template-columns: 70px 1fr 70px;
   background-color: #fff;
   color: #000;
 }
@@ -52,8 +50,15 @@ body {
   list-style: none;
 }
 
+.menu__link {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+}
+
 .menu__img {
-  width: 80%;
+  width: 100%;
 }
 
 .form {

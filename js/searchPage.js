@@ -11,14 +11,14 @@ if (!sessionStorage.getItem('active')){
 
 form.addEventListener('submit', (e) => {
   e.preventDefault()
-  const movie = form.searchField.value
-  if(movie !== ''){
+  const textToSearch = form.searchField.value
+  if(textToSearch !== ''){
     const loading = document.createElement('p')
     loading.textContent = 'Loading...'
     loading.classList.add('loading')
     results.textContent = ''
     results.appendChild(loading)
-    callMovies(movie)
+    callMovies(textToSearch)
   }
 })
 
@@ -49,12 +49,21 @@ results.addEventListener('click', (e)=> {
 })
 
 modal.addEventListener('click', (e)=> {
+  //Get out of modal
   if (e.target === modal) modal.classList.remove('show')
-  if (e.target.dataset.favorite) {
+
+  //Remove favorites
+  const favIconClicked = e.target.dataset.favorite
+  if (favIconClicked) {
+    //From results
+    const elUpdate = document.querySelector(`[data-favorite=${favIconClicked}]`)
+    elUpdate.classList.remove('added')
+    //From favorites section
     e.target.parentElement.parentElement.remove()
+    //From localStorage
     const data = getUserData()
     data.favorites.forEach((v, ind)=> {
-      if (v.imdbID === e.target.dataset.favorite){
+      if (v.imdbID === favIconClicked){
         data.favorites.splice(ind, 1)
       }
     })
@@ -62,10 +71,10 @@ modal.addEventListener('click', (e)=> {
   }
 })
 
-const callMovies = async (movie) => {
+const callMovies = async (textToSearch) => {
   try {
     const dataJson = await fetch(
-      `http://www.omdbapi.com/?apikey=13085c3f&s=${movie}`
+      `http://www.omdbapi.com/?apikey=13085c3f&s=${textToSearch}`
   )
   const data = await dataJson.json()
   if (data.Response !== 'False'){
@@ -121,7 +130,9 @@ const showMovies = (movies) => {
     container.append(mediaContainer, infoContainer)
     fragment.appendChild(container)
   })
-  results.textContent = ''
+  const loading = document.querySelector('.loading')
+  if(loading) loading.remove()
+
   results.appendChild(fragment)
 }
 
@@ -191,8 +202,8 @@ const showExtendedInfoError = (error) => {
   const textError = document.createElement('p')
   textError.textContent = error
   textError.classList.add('error')
-  modalContent.textContent = ''
-  modalContent.appendChild(textError)
+  modal.textContent = ''
+  modal.appendChild(textError)
 }
 
 //Extended Info, writing the information on the modal
@@ -317,8 +328,16 @@ const showFavorites = () => {
     faMovieContainer.append(mediaContainer, infoContainer)
     modalContent.appendChild(faMovieContainer)
   })
-  modal.appendChild(modalContent)
+  if(modalContent.children.length){
+    modal.appendChild(modalContent)
+  }else {
+    const empty = document.createElement('p')
+    empty.classList.add('empty')
+    empty.textContent = "You have not added favorites yet"
+    modal.appendChild(empty)
+  }
 }
+
 
 const getUserData = () => {
   const key = sessionStorage.getItem('active')
