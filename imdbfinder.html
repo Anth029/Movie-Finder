@@ -12,27 +12,44 @@
       <div class="logo"></div>
       <nav class="header__nav">
         <ul class="menu" id="menu">
-          <li class="menu__item"><a class="menu__link" href="/"><img class="menu__img" src="./assets/stars.png" id="favorites-section" title="Favorites" alt="Favorites"></a></li>
-          <li class="menu__item"><a class="menu__link" href="/"><img class="menu__img" src="./assets/logout.png" id="logout" title="Logout" alt="Logout"></a></li>
+          <li class="menu__item">
+            <a class="menu__link" href="#"
+              ><img
+                class="menu__img"
+                src="./assets/stars.png"
+                id="favorites-section"
+                title="Favorites"
+                alt="Favorites"
+            /></a>
+          </li>
+          <li class="menu__item">
+            <a class="menu__link" href="#"
+              ><img
+                class="menu__img"
+                src="./assets/logout.png"
+                id="logout"
+                title="Logout"
+                alt="Logout"
+            /></a>
+          </li>
         </ul>
       </nav>
     </header>
 
     <main class="main">
       <form class="form" id="search-form">
-        
-          <input placeholder="Search" type="text" name="searchField" class="form__input" />
-     
+        <input
+          placeholder="Search"
+          type="text"
+          name="searchField"
+          class="form__input"
+        />
       </form>
 
       <div class="results" id="results"></div>
 
-      <div class="modal" id="modal">
-        <!-- <div class="modal__content" id="modal-info-content"></div> -->
-      </div>
-      <!-- <div class="modal" id="modal-favorites">
-        <div class="modal__content results" id="modal-favorites-content"></div>
-      </div> -->
+      <div class="modal" id="modal"></div>
+
     </main>
 
     <script src="./js/searchPage.js"></script>
