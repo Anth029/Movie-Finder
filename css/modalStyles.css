@@ -17,13 +17,13 @@
 }
 
 .modal__extended-info {
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 90%;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.95);
   overflow: auto;
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px , 1fr));
   justify-items: center;
 }
 
@@ -35,16 +35,19 @@
   grid-column: 1/-1;
 }
 
-.extended-info__title-highlight {
+.extended-info__title--highlight-text {
 
 }
 
-.extended-info__title-normal {
+.extended-info__title--normal-text {
   color: rgb(196, 196, 196);
 }
 
 .extended-info__details {
-  /* max-width: 400px; */
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  column-gap: 10px;
 }
 
 .details__categories {
@@ -55,9 +58,12 @@
 }
 
 .extended-info__ratings {
+  justify-self: start;
+  grid-column: -2/-1;
   background-color: rgb(52, 52, 52);
-  padding: 10px;
+  padding: 20px;
   height: min-content;
+  border-radius: var(--radius);
 }
 
 .ratings__title {
@@ -67,10 +73,83 @@
   text-align: center;
 }
 
-.favorites {
+.modal__favorites {
   width: 80%;
   height: 80%;
   overflow: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 10px;
+  border-radius: var(--radius);
+}
+
+.favorites__famovie-container{
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 3px #f9fafa solid;
+  border-radius: var(--radius);
+  padding-bottom: 5px;
+}
+
+.famovie-container__famedia {
+  position: relative;
+}
+
+.famedia__img {
+  width: 100%;
+
+}
+
+.famedia__favorite {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 40px;
+  cursor: pointer;
+  background-image: url(../assets/favourite4.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.famovie-container__fainfo {
+
+}
+
+.fainfo__title {
+  margin-top: 0;
+  text-align: center;
+}
+
+.fainfo__year,
+.fainfo__type {
+  color: rgb(196, 196, 196);
+  text-align: center;
+  margin: 0;
+}
+
+.added {
+  background-image: url(../assets/favouriteselected.png);
+}
+
+.error {
+  font-size: 2em;
+  color: #f00;
+  text-align: center;
+}
+
+.loading {
+  color: aqua;
+  text-align: center;
+  font-size: 3em;
+}
+
+@media screen and (max-width:480px){
+  .modal__extended-info {
+    width: 100%;
+  }
 }

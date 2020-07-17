@@ -109,13 +109,13 @@ body {
 }
 
 .media-container__favorite {
-  cursor: pointer;
   position: absolute;
   top: 0;
   right: 0;
   z-index: 2;
   width: 30px;
   height: 40px;
+  cursor: pointer;
   background-image: url(../assets/favourite4.png);
   background-size: contain;
   background-repeat: no-repeat;
@@ -132,20 +132,4 @@ body {
   color: rgb(196, 196, 196);
   text-align: center;
   margin: 0;
-}
-
-.added {
-  background-image: url(../assets/favouriteselected.png);
-}
-
-.error {
-  font-size: 2em;
-  color: #f00;
-  text-align: center;
-}
-
-.loading {
-  color: aqua;
-  text-align: center;
-  font-size: 3em;
 }

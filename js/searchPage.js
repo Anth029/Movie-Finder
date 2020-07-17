@@ -5,12 +5,11 @@ const menu = document.getElementById('menu')
 // const modalContent = document.getElementById('modal-info-content')
 
 if (!sessionStorage.getItem('active')){
-  window.alert("Necesitas iniciar sesión")
+  window.alert("You need to login")
   location.pathname = ''
 }
 
 form.addEventListener('submit', (e) => {
-  console.log('Form')
   e.preventDefault()
   const movie = form.searchField.value
   if(movie !== ''){
@@ -24,15 +23,17 @@ form.addEventListener('submit', (e) => {
 })
 
 menu.addEventListener('click', (e) => {
-  console.log('Menu')
   if(e.target.id === "favorites-section") {
     modal.classList.add('show')
     showFavorites()
-  } 
+  }
+  if(e.target.id === "logout"){
+    sessionStorage.removeItem('active')
+    location.pathname = ''
+  }
 })
 
 results.addEventListener('click', (e)=> {
-  console.log('Results')
   const addThis = e.target.dataset.favorite
   const infoClick = e.target.dataset.imdbid
   
@@ -48,8 +49,17 @@ results.addEventListener('click', (e)=> {
 })
 
 modal.addEventListener('click', (e)=> {
-  console.log('Modal')
   if (e.target === modal) modal.classList.remove('show')
+  if (e.target.dataset.favorite) {
+    e.target.parentElement.parentElement.remove()
+    const data = getUserData()
+    data.favorites.forEach((v, ind)=> {
+      if (v.imdbID === e.target.dataset.favorite){
+        data.favorites.splice(ind, 1)
+      }
+    })
+    setUserData(data)
+  }
 })
 
 const callMovies = async (movie) => {
@@ -89,7 +99,7 @@ const showMovies = (movies) => {
     type.textContent = obj.Type
     img.setAttribute('src', obj.Poster)
     
-    getData().favorites.forEach((v)=> {
+    getUserData().favorites.forEach((v)=> {
       if(v.imdbID === obj.imdbID){
         favorite.classList.add('added')
       }
@@ -125,12 +135,15 @@ const showError = (message) => {
 const toggleFavorite = (imdbID) => {
   const movie = document.querySelector(`[data-imdbid=${imdbID}]`)
   const favoriteIcon = document.querySelector(`[data-favorite=${imdbID}]`)
-  const data = getData()
+  const data = getUserData()
   let conflict
   
   const favToSave = {
     imdbID: imdbID,
-    data: movie.innerHTML
+    image: movie.firstElementChild.firstElementChild.src,
+    title: movie.children[1].firstElementChild.textContent,
+    year: movie.children[1].children[1].textContent,
+    type: movie.children[1].children[2].textContent
   }
   
   data.favorites.forEach((value, index)=> {
@@ -147,7 +160,7 @@ const toggleFavorite = (imdbID) => {
     favoriteIcon.classList.remove('added')    
   }
 
-  setData(data) 
+  setUserData(data) 
 }
 
 //Extended Info, calling the api
@@ -268,28 +281,50 @@ const showExtendedInfoMovies = (data) => {
 const showFavorites = () => {
   modal.textContent = ''
   const modalContent = document.createElement('div')
-  modalContent.classList.add('favorites')
-  const data = getData()
-  console.log(data.favorites[0].data)
+  modalContent.classList.add('modal__favorites')
+  const data = getUserData()
   
   data.favorites.forEach((v) => {
-    const container = document.createElement('div')
-    container.classList.add('movie-container')
-    container.innerHTML = v.data
-    modalContent.appendChild(container)
+    const faMovieContainer = document.createElement('div')
+    const mediaContainer = document.createElement('div')
+    const image = document.createElement('img')
+    const favIcon = document.createElement('div')
+    const infoContainer = document.createElement('div')
+    const title = document.createElement('p')
+    const year = document.createElement('p')
+    const type = document.createElement('p')
+
+    image.setAttribute('src', v.image)
+    favIcon.dataset.favorite = v.imdbID
+    title.textContent = v.title
+    year.textContent = v.year
+    type.textContent = v.type
+
+    faMovieContainer.classList.add('favorites__famovie-container')
+    mediaContainer.classList.add('famovie-container__famedia')
+    image.classList.add('famedia__img')
+    favIcon.classList.add('famedia__favorite', 'added')
+    infoContainer.classList.add('famovie-container__fainfo')
+    title.classList.add('fainfo__title')
+    year.classList.add('fainfo__year')
+    type.classList.add('fainfo__type')
+
+    mediaContainer.append(image, favIcon)
+    infoContainer.append(title, year, type)
+    faMovieContainer.append(mediaContainer, infoContainer)
+    modalContent.appendChild(faMovieContainer)
   })
-  console.log(modalContent)
   modal.appendChild(modalContent)
 }
 
-const getData = () => {
+const getUserData = () => {
   const key = sessionStorage.getItem('active')
   const json = localStorage.getItem(key)
   const data = JSON.parse(json)
   return data
 }
 
-const setData = (data) => {
+const setUserData = (data) => {
   const key = sessionStorage.getItem('active')
   localStorage.setItem(key, JSON.stringify(data)) 
 }
