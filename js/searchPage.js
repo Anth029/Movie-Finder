@@ -68,8 +68,11 @@ const callMovies = async (movie) => {
       `http://www.omdbapi.com/?apikey=13085c3f&s=${movie}`
   )
   const data = await dataJson.json()
-  if (data.Response !== 'False') showMovies(data)
-  else showError(data.Error)
+  if (data.Response !== 'False'){
+    showMovies(data)
+  }else{
+    showError(data.Error)
+  }
   } catch (error) {
     showError(error)
   }
