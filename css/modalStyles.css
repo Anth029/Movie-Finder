@@ -35,22 +35,13 @@
   grid-column: 1/-1;
 }
 
-.extended-info__title--highlight-text {
-
-}
-
 .extended-info__title--normal-text {
   color: rgb(196, 196, 196);
 }
 
 .extended-info__details {
   grid-column: span 2;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   column-gap: 10px;
-}
-
-.details__categories {
 }
 
 .details__descriptions {
@@ -84,7 +75,7 @@
   border-radius: var(--radius);
 }
 
-.favorites__famovie-container{
+.favorites__famovie-container {
   align-self: start;
   background-color: #1a1a1a;
   border: 3px #f9fafa solid;
@@ -112,10 +103,6 @@
   background-image: url(../assets/favourite4.png);
   background-size: contain;
   background-repeat: no-repeat;
-}
-
-.famovie-container__fainfo {
-
 }
 
 .fainfo__title {
