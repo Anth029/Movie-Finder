@@ -93,17 +93,17 @@ const callMovies = async (textToSearch, page = 1) => {
 }
 
 const callback = ([entry]) => {
-  if(entry.isIntersecting){
-    callMovies(movieName, loadedPage+1)
+  if (entry.isIntersecting) {
+    callMovies(movieName, loadedPage + 1)
   }
 }
 
 let lastObserved
+const observer = new IntersectionObserver(callback)
 const setObserver = () => {
-  const observer = new IntersectionObserver(callback)
-  observer.observe(results.lastElementChild)
-  if(lastObserved) observer.unobserve(lastObserved)
+  if (lastObserved) observer.unobserve(lastObserved)
   lastObserved = results.lastElementChild
+  observer.observe(lastObserved)
 }
 
 //Movies search result: creating, writing & setting atributtes
@@ -158,7 +158,7 @@ const showError = (message) => {
   const loading = document.querySelector('.loading')
   error.classList.add('error')
   error.textContent = message
-  if(loading) loading.remove()
+  if (loading) loading.remove()
   results.appendChild(error)
 }
 
